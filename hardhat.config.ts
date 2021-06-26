@@ -1,5 +1,5 @@
 import "@nomiclabs/hardhat-waffle";
-import { HardhatUserConfig, Network } from 'hardhat/types';
+import { HardhatUserConfig } from 'hardhat/types';
 import { NetworkUserConfig } from 'hardhat/types';
 
 import '@nomiclabs/hardhat-waffle';
@@ -9,13 +9,12 @@ import 'hardhat-typechain';
 import 'hardhat-gas-reporter';
 import "hardhat-abi-exporter"
 import "hardhat-deploy";
-import "hardhat-deploy-ethers";
 
 const dotenv = require('dotenv');
 dotenv.config();
 
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
-const BSC_API_KEY = process.env.BSC_API_KEY;
+// const BSC_API_KEY = process.env.BSC_API_KEY;
 const INFURA_API_KEY= process.env.INFURA_API_KEY;
 const MNEMONIC = process.env.MNEMONIC;
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY;
@@ -57,7 +56,7 @@ const config: HardhatUserConfig & { namedAccounts: any } = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200
+        runs: 1000
       }
     }
   },

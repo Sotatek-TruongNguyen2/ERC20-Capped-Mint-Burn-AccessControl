@@ -32,7 +32,7 @@ contract AccessControl {
        _revokeRole(_account, _role);
     }
     
-    function renounceRole(address _account, bytes32 _role) public onlyRole(getAdminRole()) {
+    function renounceRole(address _account, bytes32 _role) public {
         require(_account == msg.sender, "AccessControl::You can only renounce roles for self");
         _revokeRole(msg.sender, _role);
     }
@@ -55,10 +55,10 @@ contract AccessControl {
         emit RevokeRole(_account, _role); 
     }
     
-    function _renounceRole(address _account, bytes32 _role) private {
-        require(hasRole(_account, _role), "AccessControl::User not granted for this role yet");
-        roles[_role][_account] = false;
+    // function _renounceRole(address _account, bytes32 _role) private {
+    //     require(hasRole(_account, _role), "AccessControl::User not granted for this role yet");
+    //     roles[_role][_account] = false;
         
-        emit RenounceRole(_account, _role); 
-    }
+    //     emit RenounceRole(_account, _role); 
+    // }
 }
