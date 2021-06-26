@@ -1,0 +1,33 @@
+{
+  "name": "ERC20Utilities",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "bsc:deploy": "hardhat deploy --network bsc --reset",
+    "rinkeby:deploy": "hardhat deploy --network rinkeby --reset",
+    "rinkeby:verify": "hardhat --network rinkeby etherscan-verify --solc-input",
+    "generate-types": "typechain --target=ethers-v5"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-etherscan": "^2.1.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@typechain/ethers-v5": "^6.0.1",
+    "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "hardhat": "^2.4.1",
+    "hardhat-abi-exporter": "^2.2.1",
+    "hardhat-deploy": "^0.8.9",
+    "hardhat-deploy-ethers": "^0.3.0-beta.10",
+    "hardhat-gas-reporter": "^1.0.4",
+    "hardhat-typechain": "^0.3.5",
+    "ts-generator": "^0.1.1",
+    "ts-node": "^10.0.0",
+    "typechain": "^4.0.2",
+    "typescript": "^4.3.4"
+  },
+  "devDependencies": {
+    "@types/mocha": "^8.2.2"
+  }
+}
