@@ -36,30 +36,21 @@ describe("Ruin Token", function () {
         it("Only admin to be able to grant roles for others", async () => {
             if (alice && dave && ruinContract) {
                 const daveAddress = await dave.getAddress();
-
-                try {
-                    await ruinContract.connect(dave).grantRole(daveAddress, MINTER_ROLE);
-                    return;
-                } catch (err) {
-                   expect(err.message).to.equal("VM Exception while processing transaction: revert AccessControl::Your role is not able to do this");
-                }
+                await expect(ruinContract.connect(dave).grantRole(daveAddress, MINTER_ROLE)).to.be.revertedWith("AccessControl::Your role is not able to do this");
             }
-        })
+       })
 
         it("A person not be able to be granted one role 2 times", async () => {
             if (alice && dave && ruinContract) {
                 const daveAddress = await dave.getAddress();
 
                 await ruinContract.grantRole(daveAddress, MINTER_ROLE);
-                try {
-                    await ruinContract.grantRole(daveAddress, MINTER_ROLE);
-                } catch (err) {
-                    expect(err.message).to.equal("VM Exception while processing transaction: revert AccessControl::User already granted for this role");
-                }
+                await expect(ruinContract.grantRole(daveAddress, MINTER_ROLE)).to.be.revertedWith("AccessControl::User already granted for this role");
+        
             }
         });
 
-        it("A person able to be in mary roles", async () => {
+        it("A person able to be in many roles", async () => {
             if (alice && dave && ruinContract) {
                 const aliceAddress = await alice.getAddress();
 
@@ -82,11 +73,7 @@ describe("Ruin Token", function () {
                 const aliceAddress = await alice.getAddress();
                 await ruinContract.grantRole(aliceAddress, MINTER_ROLE);
 
-                try {
-                    await ruinContract.connect(dave).renounceRole(aliceAddress, MINTER_ROLE);
-                } catch (err) {
-                    expect(err.message).to.equal("VM Exception while processing transaction: revert AccessControl::You can only renounce roles for self");
-                }
+                await expect(ruinContract.connect(dave).renounceRole(aliceAddress, MINTER_ROLE)).to.be.revertedWith("AccessControl::You can only renounce roles for self");
             }
         });
     })
