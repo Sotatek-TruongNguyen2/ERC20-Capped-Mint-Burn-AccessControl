@@ -177,4 +177,85 @@ describe("Ruin Token", function () {
             }
         })
     });
+
+    describe("Transfer", async () => { 
+        const MINTING_AMOUNT = 100000;
+        it("User be able to transfer tokens", async () => {
+            if (alice && dave && ruinContract) {
+                const aliceAddress = await alice.getAddress();
+                const daveAddress = await dave.getAddress();
+
+                await ruinContract.connect(alice).grantRole(aliceAddress, MINTER_ROLE);
+                await ruinContract.connect(alice).mint(daveAddress, MINTING_AMOUNT);
+                await expect(ruinContract.connect(dave).transfer(aliceAddress, 5000)).to.be.emit(ruinContract, "Transfer");
+            }
+        });
+
+        it("User be able to transfer others's tokens", async () => {
+            if (alice && dave && ruinContract) {
+                const aliceAddress = await alice.getAddress();
+                const daveAddress = await dave.getAddress();
+
+                await ruinContract.connect(alice).grantRole(aliceAddress, MINTER_ROLE);
+                await ruinContract.connect(alice).mint(aliceAddress, MINTING_AMOUNT);
+                await ruinContract.connect(alice).approve(daveAddress, MINTING_AMOUNT);
+                await expect(ruinContract.connect(dave).transferFrom(aliceAddress, daveAddress, MINTING_AMOUNT)).to.be.emit(ruinContract, "Transfer");
+            }
+        });
+
+        it("User not be able to transfer tokens due to paused event", async () => {
+            if (alice && dave && ruinContract) {
+                const aliceAddress = await alice.getAddress();
+                const daveAddress = await dave.getAddress();
+
+                await ruinContract.connect(alice).grantRole(aliceAddress, MINTER_ROLE);
+                await ruinContract.connect(alice).mint(daveAddress, MINTING_AMOUNT);
+                await ruinContract.connect(dave).transfer(aliceAddress, 5000);
+                await ruinContract.connect(alice).pause();
+                await expect(ruinContract.connect(dave).transfer(aliceAddress, 5000)).to.be.revertedWith("ERC20Pausable: token transfer while paused");
+            }
+        });
+
+        it("User not be able to transfer others's tokens due to paused event", async () => {
+            if (alice && dave && ruinContract) {
+                const aliceAddress = await alice.getAddress();
+                const daveAddress = await dave.getAddress();
+
+                await ruinContract.connect(alice).grantRole(aliceAddress, MINTER_ROLE);
+                await ruinContract.connect(alice).mint(aliceAddress, MINTING_AMOUNT);
+                await ruinContract.connect(alice).approve(daveAddress, MINTING_AMOUNT);
+                await ruinContract.connect(dave).transferFrom(aliceAddress, daveAddress, 1000);
+                await ruinContract.connect(alice).pause();
+                await expect(ruinContract.connect(dave).transferFrom(aliceAddress, daveAddress, 5000)).to.be.revertedWith("ERC20Pausable: token transfer while paused");
+            }
+        });
+    });
+
+    describe("Pausable", async () => {
+        it("ADMIN be able to pause transfer actions", async () => {
+            if (alice && dave && ruinContract) {
+                await expect(ruinContract.connect(alice).pause()).to.be.emit(ruinContract, "Paused");
+            }
+        });
+
+        it("ADMIN be able to unpause transfer actions", async () => {
+            if (alice && dave && ruinContract) {
+                await ruinContract.connect(alice).pause();
+                await expect(ruinContract.connect(alice).unpause()).to.be.emit(ruinContract, "UnPaused");
+            }
+        });
+
+        it("User not be able to pause transfer actions", async () => {
+            if (alice && dave && ruinContract) {
+                await expect(ruinContract.connect(dave).pause()).to.be.revertedWith("AccessControl::Your role is not able to do this");
+            }
+        });
+
+        it("User not be able to unpause transfer actions", async () => {
+            if (alice && dave && ruinContract) {
+                await ruinContract.connect(alice).pause();
+                await expect(ruinContract.connect(dave).unpause()).to.be.revertedWith("AccessControl::Your role is not able to do this");
+            }
+        });
+    });
 });

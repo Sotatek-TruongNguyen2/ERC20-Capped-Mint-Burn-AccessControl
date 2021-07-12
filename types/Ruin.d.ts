@@ -38,12 +38,15 @@ interface RuinInterface extends ethers.utils.Interface {
     "isMinter(address)": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
+    "pause()": FunctionFragment;
+    "paused()": FunctionFragment;
     "renounceRole(address,bytes32)": FunctionFragment;
     "revokeRole(address,bytes32)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "unpause()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -92,6 +95,8 @@ interface RuinInterface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
     values: [string, BytesLike]
@@ -113,6 +118,7 @@ interface RuinInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "ADMIN_ROLE", data: BytesLike): Result;
   decodeFunctionResult(
@@ -139,6 +145,8 @@ interface RuinInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "isMinter", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
     data: BytesLike
@@ -154,20 +162,25 @@ interface RuinInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "GrantRole(address,bytes32)": EventFragment;
+    "Paused(address)": EventFragment;
     "RenounceRole(address,bytes32)": EventFragment;
     "RevokeRole(address,bytes32)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "UnPaused(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GrantRole"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RenounceRole"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RevokeRole"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UnPaused"): EventFragment;
 }
 
 export class Ruin extends Contract {
@@ -305,6 +318,14 @@ export class Ruin extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<[string]>;
 
+    pause(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "pause()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
+
+    "paused()"(overrides?: CallOverrides): Promise<[boolean]>;
+
     renounceRole(
       _account: string,
       _role: BytesLike,
@@ -362,6 +383,10 @@ export class Ruin extends Contract {
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    unpause(overrides?: Overrides): Promise<ContractTransaction>;
+
+    "unpause()"(overrides?: Overrides): Promise<ContractTransaction>;
   };
 
   ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -485,6 +510,14 @@ export class Ruin extends Contract {
 
   "name()"(overrides?: CallOverrides): Promise<string>;
 
+  pause(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "pause()"(overrides?: Overrides): Promise<ContractTransaction>;
+
+  paused(overrides?: CallOverrides): Promise<boolean>;
+
+  "paused()"(overrides?: CallOverrides): Promise<boolean>;
+
   renounceRole(
     _account: string,
     _role: BytesLike,
@@ -542,6 +575,10 @@ export class Ruin extends Contract {
     amount: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  unpause(overrides?: Overrides): Promise<ContractTransaction>;
+
+  "unpause()"(overrides?: Overrides): Promise<ContractTransaction>;
 
   callStatic: {
     ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
@@ -665,6 +702,14 @@ export class Ruin extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<string>;
 
+    pause(overrides?: CallOverrides): Promise<void>;
+
+    "pause()"(overrides?: CallOverrides): Promise<void>;
+
+    paused(overrides?: CallOverrides): Promise<boolean>;
+
+    "paused()"(overrides?: CallOverrides): Promise<boolean>;
+
     renounceRole(
       _account: string,
       _role: BytesLike,
@@ -722,6 +767,10 @@ export class Ruin extends Contract {
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    unpause(overrides?: CallOverrides): Promise<void>;
+
+    "unpause()"(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -733,11 +782,15 @@ export class Ruin extends Contract {
 
     GrantRole(account: null, role: null): EventFilter;
 
+    Paused(account: null): EventFilter;
+
     RenounceRole(account: null, role: null): EventFilter;
 
     RevokeRole(account: null, role: null): EventFilter;
 
     Transfer(from: string | null, to: string | null, value: null): EventFilter;
+
+    UnPaused(account: null): EventFilter;
   };
 
   estimateGas: {
@@ -862,6 +915,14 @@ export class Ruin extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    pause(overrides?: Overrides): Promise<BigNumber>;
+
+    "pause()"(overrides?: Overrides): Promise<BigNumber>;
+
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "paused()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     renounceRole(
       _account: string,
       _role: BytesLike,
@@ -919,6 +980,10 @@ export class Ruin extends Contract {
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<BigNumber>;
+
+    unpause(overrides?: Overrides): Promise<BigNumber>;
+
+    "unpause()"(overrides?: Overrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1052,6 +1117,14 @@ export class Ruin extends Contract {
 
     "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    pause(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "pause()"(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "paused()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     renounceRole(
       _account: string,
       _role: BytesLike,
@@ -1109,5 +1182,9 @@ export class Ruin extends Contract {
       amount: BigNumberish,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
+
+    unpause(overrides?: Overrides): Promise<PopulatedTransaction>;
+
+    "unpause()"(overrides?: Overrides): Promise<PopulatedTransaction>;
   };
 }

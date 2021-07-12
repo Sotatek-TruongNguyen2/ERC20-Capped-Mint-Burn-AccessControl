@@ -14,7 +14,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
-// const BSC_API_KEY = process.env.BSC_API_KEY;
+const BSC_API_KEY = process.env.BSC_API_KEY;
 const INFURA_API_KEY= process.env.INFURA_API_KEY;
 const MNEMONIC = process.env.MNEMONIC;
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY;
@@ -61,7 +61,7 @@ const config: HardhatUserConfig & { namedAccounts: any } = {
     }
   },
   etherscan : {
-    apiKey: ETHERSCAN_API_KEY
+    apiKey: BSC_API_KEY
   },
   gasReporter: {
     currency: "USD",

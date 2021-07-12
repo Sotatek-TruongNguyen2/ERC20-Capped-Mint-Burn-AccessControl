@@ -3,12 +3,16 @@
 /* eslint-disable */
 export type { AccessControl } from "./AccessControl";
 export type { ERC20Capped } from "./ERC20Capped";
+export type { ERC20Pausable } from "./ERC20Pausable";
 export type { IERC20 } from "./IERC20";
 export type { ERC20 } from "./ERC20";
 export type { Ruin } from "./Ruin";
+export type { Pausable } from "./Pausable";
 
 export { AccessControl__factory } from "./factories/AccessControl__factory";
 export { ERC20Capped__factory } from "./factories/ERC20Capped__factory";
+export { ERC20Pausable__factory } from "./factories/ERC20Pausable__factory";
 export { IERC20__factory } from "./factories/IERC20__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
 export { Ruin__factory } from "./factories/Ruin__factory";
+export { Pausable__factory } from "./factories/Pausable__factory";

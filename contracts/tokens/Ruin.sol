@@ -2,10 +2,11 @@
 
 pragma solidity ^0.8.0;
 
+import "../extensions/ERC20Pausable.sol";
 import "../extensions/ERC20Capped.sol";
 import "../access/AccessControl.sol";
 
-contract Ruin is ERC20Capped, AccessControl {
+contract Ruin is AccessControl, ERC20Pausable, ERC20Capped {
     bytes32 constant public MINTER_ROLE = keccak256(abi.encodePacked("MINTER_ROLE"));
     bytes32 constant public BURNER_ROLE = keccak256(abi.encodePacked("BURNER_ROLE"));
     
@@ -17,13 +18,21 @@ contract Ruin is ERC20Capped, AccessControl {
     ) ERC20(_name, _symbol, _decimals) ERC20Capped(_cap) {
         _setupRole(_msgSender(), ADMIN_ROLE);
     }
+
+    function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(ERC20, ERC20Pausable) {
+        super._beforeTokenTransfer(from, to, amount);
+    }
+
+    function _mint(address _account, uint256 _amount) internal override(ERC20, ERC20Capped) {
+        super._mint(_account, _amount);
+    }
     
     function burn(address _account, uint256 _amount) public onlyRole(BURNER_ROLE) {
         _burn(_account, _amount);
     }
 
     function mint(address _account, uint256 _amount) public onlyRole(MINTER_ROLE) {
-        _mint(_account, _amount);
+        super._mint(_account, _amount);
     }
 
     function isMinter(address _account) public view returns(bool) {
@@ -32,5 +41,13 @@ contract Ruin is ERC20Capped, AccessControl {
 
     function isBurner(address _account) public view returns(bool) {
         return hasRole(_account, BURNER_ROLE);
+    }
+
+    function pause() public whenNotPaused onlyRole(ADMIN_ROLE) {
+        _pause();
+    }
+
+    function unpause() public whenPaused onlyRole(ADMIN_ROLE) {
+        _unpause();
     }
 }

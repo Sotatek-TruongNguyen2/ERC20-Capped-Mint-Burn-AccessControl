@@ -38,22 +38,22 @@ contract ERC20 is IERC20, Context {
     }
      
      
-    function balanceOf(address account) external view override returns (uint256) {
+    function balanceOf(address account) public view override returns (uint256) {
          return _balances[account];
     }
 
    
-    function transfer(address recipient, uint256 amount) external override returns (bool) {
+    function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
         _transfer(_msgSender(), recipient, amount);
         return true;
     }
  
-    function allowance(address owner, address spender) external view override returns (uint256) {
+    function allowance(address owner, address spender) public view virtual override returns (uint256) {
         return _allowances[owner][spender];   
     }
 
 
-    function approve(address spender, uint256 amount) external override returns (bool) {
+    function approve(address spender, uint256 amount) public virtual override returns (bool) {
         _approve(_msgSender(), spender, amount);
         return true;
     }
@@ -62,7 +62,7 @@ contract ERC20 is IERC20, Context {
         address sender,
         address recipient,
         uint256 amount
-    ) external override returns (bool) {
+    ) public virtual override returns (bool) {
         uint256 currentAllowance = _allowances[sender][_msgSender()];
         require(currentAllowance >= amount, "Ruin::Transfer amount exceeds allowance");
         _transfer(sender, recipient, amount);
@@ -76,6 +76,8 @@ contract ERC20 is IERC20, Context {
         address _recipient, 
         uint256 _amount
     ) private {
+        _beforeTokenTransfer(_sender, _recipient, _amount);
+        
         require(_recipient != address(0), "Ruin::Address of recipient is ilegal");
         require(_sender != address(0), "Ruin::Address of sender is ilegal");
         require(_amount <= _balances[_sender], "Ruin::Transfer amount exceeds account balance");
@@ -91,8 +93,8 @@ contract ERC20 is IERC20, Context {
         address _spender, 
         uint256 _amount
     ) private {
-        require(_approver != address(0), "Ruin::Address of approver is ilegal");
-        require(_spender != address(0), "Ruin::Address of spender is ilegal");
+        require(_approver != address(0), "Ruin::Address of approver is illegal");
+        require(_spender != address(0), "Ruin::Address of spender is illegal");
         
         _allowances[_approver][_spender] = _amount;
         
@@ -100,7 +102,7 @@ contract ERC20 is IERC20, Context {
     }
     
     function _mint(address _receiver, uint256 _amount) internal virtual {
-        require(_receiver != address(0), "Ruin::Address of receiver is ilegal");
+        require(_receiver != address(0), "Ruin::Address of receiver is illegal");
         
         _totalSupply += _amount;
         _balances[_receiver] += _amount;
@@ -108,8 +110,8 @@ contract ERC20 is IERC20, Context {
         emit Transfer(address(0), _receiver, _amount);
     }
     
-    function _burn(address _account, uint256 _amount) internal {
-        require(_account != address(0), "Ruin::Address is ilegal"); 
+    function _burn(address _account, uint256 _amount) internal virtual {
+        require(_account != address(0), "Ruin::Address is illegal"); 
         require(_balances[_account] >= _amount, "Ruin::Burning amount exceeds account balance");
         
         _totalSupply -= _amount;
@@ -118,4 +120,10 @@ contract ERC20 is IERC20, Context {
         emit Transfer(_account, address(0), _amount);
     }
 
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal virtual  {
+    }
 }

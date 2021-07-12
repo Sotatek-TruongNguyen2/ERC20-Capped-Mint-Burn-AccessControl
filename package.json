@@ -7,7 +7,8 @@
     "bsc:deploy": "hardhat deploy --network bsc --reset",
     "rinkeby:deploy": "hardhat deploy --network rinkeby --reset",
     "rinkeby:verify": "hardhat --network rinkeby etherscan-verify --solc-input",
-    "test": "mocha --timeout 20000 --exit"
+    "bsc:verify": "hardhat --network bsc etherscan-verify --solc-input",
+    "test": "mocha --timeout 20000"
   },
   "dependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
